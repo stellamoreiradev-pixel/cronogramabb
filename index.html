@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudos BB - Escriturário</title>
+    <style>
+        /* ========== CSS VARIABLES ========== */
+        :root {
+            --primary: #10B981;
+            --primary-light: #34D399;
+            --primary-dark: #059669;
+            --secondary: #6366F1;
+            --secondary-light: #818CF8;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            
+            --bg: #F9FAFB;
+            --surface: #FFFFFF;
+            --surface-hover: #F3F4F6;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            --text: #111827;
+            --text-muted: #6B7280;
+            --text-light: #9CA3AF;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 20px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+        }
+        
+        /* ========== RESET & BASE ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            font-size: 14px;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* ========== TYPOGRAPHY ========== */
+        h1, h2, h3, h4, h5, h6 { 
+            font-weight: 600; 
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.25;
+            letter-spacing: -0.025em;
+        }
+        
+        h1 { 
+            font-size: 2rem; 
+            color: var(--text); 
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+        h2 { 
+            font-size: 1.5rem; 
+            font-weight: 600;
+        }
+        h3 { 
+            font-size: 1.25rem; 
+            font-weight: 600;
+        }
+        h4 {
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        
+        /* ========== LAYOUT ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+        
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-light);
+            padding: var(--spacing-xl) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-lg);
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .header-emoji {
+            font-size: 2.5rem;
+        }
+        
+        .header-text h1 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        
+        .main-content {
+            padding: var(--spacing-2xl) 0;
+        }
+        
+        /* ========== NAVIGATION TABS ========== */
+        .tabs {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-2xl);
+            background: var(--surface);
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+        
+        .tab-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            flex: 1;
+            text-align: center;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary);
+            background: var(--surface-hover);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ========== CARDS ========== */
+        .card {
+            background: var(--surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--surface);
+        }
+        
+        .card-header h3 {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .card-body {
+            padding: var(--spacing-xl);
+        }
+        
+        /* ========== DASHBOARD GRID ========== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: var(--spacing-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .stats-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* ========== PROGRESS BARS ========== */
+        .progress {
+            background: var(--border-light);
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+            margin: var(--spacing-sm) 0;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-lg {
+            height: 12px;
+        }
+        
+        .progress-lg .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+        }
+        
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .btn-outline {
+            border-color: var(--border);
+            color: var(--text);
+            background: var(--surface);
+        }
+        
+        .btn-outline:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-ghost {
+            background: none;
+            color: var(--text-muted);
+            border: none;
+        }
+        
+        .btn-ghost:hover {
+            color: var(--primary);
+            background: var(--surface-hover);
+        }
+        
+        .btn-sm {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: 0.8125rem;
+            min-height: 36px;
+        }
+        
+        .btn-xs {
+            padding: 0.25rem var(--spacing-xs);
+            font-size: 0.75rem;
+            min-height: 28px;
+        }
+        
+        /* ========== STATUS BADGES ========== */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 0.25rem var(--spacing-sm);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .status-not-started {
+            background: #F3F4F6;
+            color: #6B7280;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .status-in-progress {
+            background: #DBEAFE;
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+        
+        .status-review {
+            background: #FEF3C7;
+            color: #D97706;
+            border: 1px solid #FCD34D;
+        }
+        
+        .status-completed {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #6EE7B7;
+        }
+        
+        /* ========== SUBJECT LIST ========== */
+        .subject-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        .subject-item {
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .subject-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .subject-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background: var(--surface);
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+        
+        .subject-header:hover {
+            background: var(--surface-hover);
+        }
+        
+        .subject-info {
+            flex: 1;
+        }
+        
+        .subject-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text);
+        }
+        
+        .subject-meta {
+            display: flex;
+            gap: var(--spacing-lg);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        
+        .subject-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .subject-stats {
+            text-align: right;
+            margin-right: var(--spacing-lg);
+        }
+        
+        .subject-stats-number {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text);
+        }
+        
+        .expand-icon {
+            font-size: 1.25rem;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+        }
+        
+        .subject-item.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .subject-content {
+            display: none;
+            padding: 0 var(--spacing-xl) var(--spacing-xl);
+            background: #FAFBFC;
+        }
+        
+        .subject-item.expanded .subject-content {
+            display: block;
+        }
+        
+        /* ========== TOPIC LIST ========== */
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .topic-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-light);
+            background: var(--surface);
+            transition: var(--transition);
+        }
+        
+        .topic-item:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .topic-number {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 2rem;
+            font-size: 0.875rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .topic-text {
+            flex: 1;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+        
+        .topic-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .topic-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+            gap: var(--spacing-xs);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            min-width: 140px;
+        }
+        
+        .review-badge {
+            font-size: 0.75rem;
+            padding: 0.2rem var(--spacing-sm);
+            border-radius: 50px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .review-today { 
+            background: #FEF3C7; 
+            color: #D97706; 
+            border: 1px solid #FCD34D;
+        }
+        .review-overdue { 
+            background: #FEE2E2; 
+            color: #DC2626; 
+            border: 1px solid #FECACA;
+        }
+        .review-upcoming { 
+            background: #D1FAE5; 
+            color: #065F46; 
+            border: 1px solid #6EE7B7;
+        }
+        
+        /* ========== CONTROLS ========== */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-lg);
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: var(--surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            background: var(--surface);
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+        }
+        
+        .filter-select {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            background: var(--surface);
+            font-size: 0.875rem;
+            color: var(--text);
+            transition: var(--transition);
+            min-width: 160px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--border-radius-xl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+        }
+        
+        .modal-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+        
+        .modal-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: end;
+            gap: var(--spacing-sm);
+            background: var(--bg);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+        
+        /* ========== FORM ELEMENTS ========== */
+        /* ========== FORM ELEMENTS ========== */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            background: var(--surface);
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: end;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* ========== WEEKLY GOALS ========== */
+        .weekly-goals {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .goal-item {
+            padding: var(--spacing-lg);
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .goal-item:hover {
+            box-shadow: var(--shadow);
+        }
+        
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .goal-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+        
+        .goal-progress {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        /* ========== REVIEW QUEUE ========== */
+        .review-queue {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-sm);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .queue-item:hover {
+            box-shadow: var(--shadow);
+        }
+        
+        .queue-item.overdue {
+            border-color: var(--danger);
+            background: #FEF2F2;
+        }
+        
+        .queue-item.today {
+            border-color: var(--warning);
+            background: #FFFBEB;
+        }
+        
+        .queue-subject {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 180px;
+            font-size: 0.875rem;
+        }
+        
+        .queue-topic {
+            flex: 1;
+            font-size: 0.875rem;
+        }
+        
+        .queue-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.75rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: none;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .subject-header {
+                padding: 1rem;
+            }
+            
+            .subject-content {
+                padding: 0 1rem 1rem;
+            }
+            
+            .topic-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            
+            .topic-actions {
+                justify-content: center;
+            }
+            
+            .topic-meta {
+                align-items: start;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+        
+        /* ========== ANIMATIONS ========== */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .card, .subject-item, .topic-item {
+            animation: slideIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* ========== UTILITIES ========== */
+        .text-muted { color: var(--text-muted); }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 0.5rem; }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-title">
+                    <div class="header-emoji">📚</div>
+                    <div class="header-text">
+                        <h1>Estudos BB - Escriturário</h1>
+                        <div class="header-subtitle">Acompanhe seu progresso no concurso</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-ghost btn-sm" onclick="exportData()">
+                        📤 Exportar
+                    </button>
+                    <button class="btn btn-ghost btn-sm" onclick="showImportModal()">
+                        📥 Importar
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="showGoalsModal()">
+                        🎯 Metas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="container">
+            <!-- INSTRUCTIONS -->
+            <div class="card" style="margin-bottom: var(--spacing-2xl);">
+                <div class="card-body">
+                    <h4 style="color: var(--primary); margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-xs);">
+                        💡 Como usar
+                    </h4>
+                    <p style="color: var(--text-muted); line-height: 1.6;">
+                        <strong>Status:</strong> Clique nos botões coloridos para marcar progresso • 
+                        <strong>Revisão:</strong> Use os botões "1d/7d/15d/30d" para agendar • 
+                        <strong>Busca:</strong> Digite para filtrar tópicos • 
+                        <strong>Metas:</strong> Configure objetivos semanais no botão "Metas"
+                    </p>
+                </div>
+            </div>
+
+            <!-- NAVIGATION TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+                <button class="tab-btn" onclick="switchTab('subjects')">📋 Matérias</button>
+                <button class="tab-btn" onclick="switchTab('review')">🔄 Revisões</button>
+            </div>
+
+            <!-- DASHBOARD TAB -->
+            <div id="dashboard-tab" class="tab-content active">
+                <!-- STATS GRID -->
+                <div class="dashboard-grid">
+                    <div class="card stats-card">
+                        <div class="stats-number" id="total-progress">0%</div>
+                        <div class="stats-label">Progresso Geral</div>
+                        <div class="progress progress-lg mt-1">
+                            <div class="progress-bar" id="total-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="card stats-card">
+                        <div class="stats-number" id="completed-count">0</div>
+                        <div class="stats-label">Tópicos Concluídos</div>
+                    </div>
+                    <div class="card stats-card">
+                        <div class="stats-number" id="review-count">0</div>
+                        <div class="stats-label">Pendentes de Revisão</div>
+                    </div>
+                    <div class="card stats-card">
+                        <div class="stats-number" id="weekly-progress">0%</div>
+                        <div class="stats-label">Meta Semanal</div>
+                        <div class="progress mt-1">
+                            <div class="progress-bar" id="weekly-progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEKLY GOALS -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🎯 Metas da Semana</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="weekly-goals" id="weekly-goals-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REVIEW QUEUE -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔄 Fila de Revisão</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="review-queue-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBJECT PROGRESS -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📈 Progresso por Matéria</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="subject-progress-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBJECTS TAB -->
+            <div id="subjects-tab" class="tab-content">
+                <!-- CONTROLS -->
+                <div class="controls">
+                    <div class="search-box">
+                        <input type="text" class="search-input" id="search-input" 
+                               placeholder="🔍 Buscar tópicos..." 
+                               oninput="filterTopics()">
+                    </div>
+                    <div class="filter-group">
+                        <select class="filter-select" id="subject-filter" onchange="filterTopics()">
+                            <option value="">Todas as matérias</option>
+                        </select>
+                        <select class="filter-select" id="status-filter" onchange="filterTopics()">
+                            <option value="">Todos os status</option>
+                            <option value="not-started">Não iniciado</option>
+                            <option value="in-progress">Em andamento</option>
+                            <option value="review">Revisar</option>
+                            <option value="completed">Concluído</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="markAllCompleted()">
+                        ✅ Marcar Visíveis como Concluído
+                    </button>
+                    <button class="btn btn-outline" onclick="resetProgress()">
+                        🔄 Resetar Progresso
+                    </button>
+                </div>
+
+                <!-- SUBJECTS LIST -->
+                <div class="subject-list" id="subjects-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- REVIEW TAB -->
+            <div id="review-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📅 Agenda de Revisões</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="full-review-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    <!-- Goals Modal -->
+    <div id="goals-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 Configurar Metas Semanais</h3>
+                <button class="close-btn" onclick="closeModal('goals-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="goals-form-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('goals-modal')">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveGoals()">Salvar Metas</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📥 Importar Dados</h3>
+                <button class="close-btn" onclick="closeModal('import-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Selecione o arquivo JSON:</label>
+                    <input type="file" class="form-input" id="import-file" accept=".json">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('import-modal')">Cancelar</button>
+                <button class="btn btn-primary" onclick="importData()">Importar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== INITIAL DATA STRUCTURE ==========
+        // EDIT BELOW TO MODIFY SUBJECTS, PRIORITIES AND DEFAULT GOALS
+        const INITIAL_DATA = {
+            subjects: [
+                {
+                    id: 'vendas',
+                    name: 'Vendas e Negociação',
+                    priorityRank: 1,
+                    weightLabel: 'Maior peso',
+                    weeklyGoal: 8,
+                    goalMode: 'topics', // 'topics' or 'reviews'
+                    topics: [
+                        'Noções de estratégia empresarial: análise de mercado, forças competitivas, imagem institucional, identidade e posicionamento',
+                        'Segmentação de mercado.',
+                        'Ações para aumentar o valor percebido pelo cliente.',
+                        'Gestão da experiência do cliente.',
+                        'Aprendizagem e sustentabilidade organizacional.',
+                        'Características dos serviços: intangibilidade, inseparabilidade, variabilidade e perecibilidade.',
+                        'Gestão da qualidade em serviços.',
+                        'Técnicas de vendas: da pré-abordagem ao pós-vendas.',
+                        'Noções de marketing digital: geração de leads; técnica de copywriting; gatilhos mentais; Inbound marketing.',
+                        'Ética e conduta profissional em vendas.',
+                        'Padrões de qualidade no atendimento aos clientes.',
+                        'Utilização de canais remotos para vendas.',
+                        'Comportamento do consumidor e sua relação com vendas e negociação.',
+                        'Política de Relacionamento com o Cliente: Resolução nº 4.949, de 30 de setembro de 2021.',
+                        'Resolução CMN nº 4.860, de 23 de outubro de 2020 (ouvidoria).',
+                        'Lei Brasileira de Inclusão da Pessoa com Deficiência: Lei nº 13.146/2015.',
+                        'Código de Proteção e Defesa do Consumidor: Lei nº 8.078/1990 (versão atualizada).'
+                    ]
+                },
+                {
+                    id: 'informatica',
+                    name: 'Conhecimentos de Informática',
+                    priorityRank: 2,
+                    weightLabel: 'Alto',
+                    weeklyGoal: 7,
+                    goalMode: 'topics',
+                    topics: [
+                        'Noções de sistemas operacionais – Windows 10 (32-64 bits) e ambiente Linux (SUSE SLES 15 SP2)',
+                        'Edição de textos, planilhas e apresentações (Microsoft Office Word, Excel e PowerPoint - O365).',
+                        'Segurança da informação: fundamentos, conceitos e mecanismos de segurança.',
+                        'Proteção de estações de trabalho: Controle de dispositivos USB, hardening, antimalware e firewall pessoal.',
+                        'Conceitos de organização e de gerenciamento de informações, arquivos, pastas e programas.',
+                        'Redes de computadores: Conceitos básicos, ferramentas, aplicativos e procedimentos de Internet e intranet.',
+                        'Navegador Web (Microsoft Edge 91 e Mozilla Firefox 78 ESR), busca e pesquisa na Web.',
+                        'Correio eletrônico, grupos de discussão, fóruns e wikis.',
+                        'Redes Sociais (Twitter, Facebook, Linkedin, WhatsApp, YouTube, Instagram e Telegram).',
+                        'Visão geral sobre sistemas de suporte à decisão e inteligência de negócio.',
+                        'Fundamentos sobre análise de dados.',
+                        'Conceitos de educação a distância.',
+                        'Conceitos de tecnologias e ferramentas multimídia, de reprodução de áudio e vídeo.',
+                        'Ferramentas de produtividade e trabalho a distância (Microsoft Teams, Cisco Webex, Google Hangout, Google Drive e Skype).'
+                    ]
+                },
+                {
+                    id: 'bancarios',
+                    name: 'Conhecimentos Bancários',
+                    priorityRank: 3,
+                    weightLabel: 'Alto',
+                    weeklyGoal: 6,
+                    goalMode: 'topics',
+                    topics: [
+                        'Sistema Financeiro Nacional: Estrutura do Sistema Financeiro Nacional; Órgãos normativos e instituições supervisoras, executoras e operadoras.',
+                        'Mercado financeiro e seus desdobramentos (mercados monetário, de crédito, de capitais e cambial).',
+                        'Moeda e política monetária: Políticas monetárias convencionais e não-convencionais (Quantitative Easing); Taxa SELIC e operações compromissadas; O debate sobre os depósitos remunerados dos bancos comerciais no Banco Central do Brasil.',
+                        'Orçamento público, títulos do Tesouro Nacional e dívida pública.',
+                        'Produtos Bancários: Noções de cartões de crédito e débito, crédito direto ao consumidor, crédito rural, poupança, capitalização, previdência, consórcio, investimentos e seguros.',
+                        'Noções de Mercado de capitais.',
+                        'Noções de Mercado de Câmbio: Instituições autorizadas a operar e operações básicas.',
+                        'Regimes de taxas de câmbio fixas, flutuantes e regimes intermediários.',
+                        'Taxas de câmbio nominais e reais.',
+                        'Impactos das taxas de câmbio sobre as exportações e importações.',
+                        'Diferencial de juros interno e externo, prêmios de risco, fluxo de capitais e seus impactos sobre as taxas de câmbio.',
+                        'Dinâmica do Mercado: Operações no mercado interbancário.',
+                        'Mercado bancário: Operações de tesouraria, varejo bancário e recuperação de crédito.',
+                        'Taxas de juros de curto prazo e a curva de juros; taxas de juros nominais e reais.',
+                        'Garantias do Sistema Financeiro Nacional: aval; fiança; penhor mercantil; alienação fiduciária; hipoteca; fianças bancárias.',
+                        'Crime de lavagem de dinheiro: conceito e etapas; Prevenção e combate ao crime de lavagem de dinheiro: Lei nº 9.613/98 e suas alterações; Circular nº 3.978, de 23 de janeiro de 2020 e Carta Circular nº 4.001, de 29 de janeiro de 2020 e suas alterações.',
+                        'Autorregulação bancária e Normativos SARB.',
+                        'Sigilo Bancário: Lei Complementar nº 105/2001 e suas alterações.',
+                        'Lei Geral de Proteção de Dados (LGPD): Lei nº 13.709, de 14 de agosto de 2018 e suas alterações.',
+                        'Legislação anticorrupção: Lei nº 12.846/2013 e Decreto nº 11.129 de 11/07/2022.',
+                        'Segurança cibernética: Resolução CMN nº 4.893, de 26/02/2021.',
+                        'Ética aplicada: ética, moral, valores e virtudes; noções de ética empresarial e profissional. A gestão da ética nas empresas públicas e privadas. Código de Ética do Banco do Brasil (disponível no sítio do BB na internet).',
+                        'Política de Responsabilidade Socioambiental do Banco do Brasil (disponível no sítio do BB na internet).',
+                        'ASG (Ambiental, Social e Governança): Economia Sustentável; Financiamentos; Mercado PJ.'
+                    ]
+                },
+                {
+                    id: 'portugues',
+                    name: 'Língua Portuguesa',
+                    priorityRank: 4,
+                    weightLabel: 'Médio',
+                    weeklyGoal: 5,
+                    goalMode: 'topics',
+                    topics: [
+                        'Compreensão de textos.',
+                        'Ortografia oficial.',
+                        'Classe e emprego de palavras.',
+                        'Emprego do acento indicativo de crase.',
+                        'Sintaxe da oração e do período.',
+                        'Emprego dos sinais de pontuação.',
+                        'Concordância verbal e nominal.',
+                        'Regência verbal e nominal.',
+                        'Colocação dos pronomes oblíquos átonos (próclise, mesóclise e ênclise).'
+                    ]
+                },
+                {
+                    id: 'matematica',
+                    name: 'Matemática',
+                    priorityRank: 5,
+                    weightLabel: 'Médio',
+                    weeklyGoal: 4,
+                    goalMode: 'topics',
+                    topics: [
+                        'Números inteiros, racionais e reais; problemas de contagem.',
+                        'Sistema legal de medidas.',
+                        'Razões e proporções; divisão proporcional; regras de três simples e compostas; porcentagens.',
+                        'Lógica proposicional.',
+                        'Noções de conjuntos.',
+                        'Relações e funções; Funções polinomiais; Funções exponenciais e logarítmicas.',
+                        'Matrizes.',
+                        'Determinantes.',
+                        'Sistemas lineares.',
+                        'Sequências.',
+                        'Progressões aritméticas e progressões geométricas.'
+                    ]
+                },
+                {
+                    id: 'matematica_financeira',
+                    name: 'Matemática Financeira',
+                    priorityRank: 6,
+                    weightLabel: 'Médio',
+                    weeklyGoal: 4,
+                    goalMode: 'topics',
+                    topics: [
+                        'Conceitos gerais - O conceito do valor do dinheiro no tempo; Capital, juros, taxas de juros; Capitalização, regimes de capitalização; Fluxos de caixa e diagramas de fluxo de caixa; Equivalência financeira.',
+                        'Juros simples - Cálculo do montante, dos juros, da taxa de juros, do principal e do prazo da operação financeira.',
+                        'Juros compostos - Cálculo do montante, dos juros, da taxa de juros, do principal e do prazo da operação financeira.',
+                        'Sistemas de amortização - Sistema price; Sistema SAC.'
+                    ]
+                },
+                {
+                    id: 'atualidades',
+                    name: 'Atualidades do Mercado Financeiro',
+                    priorityRank: 7,
+                    weightLabel: 'Baixo',
+                    weeklyGoal: 3,
+                    goalMode: 'topics',
+                    topics: [
+                        'Os bancos na Era Digital: Atualidade, tendências e desafios.',
+                        'Internet banking.',
+                        'Mobile banking.',
+                        'Open banking.',
+                        'Novos modelos de negócios.',
+                        'Fintechs, startups e big techs.',
+                        'Sistema de bancos sombra (Shadow banking).',
+                        'Funções da moeda.',
+                        'O dinheiro na era digital: blockchain, bitcoin e demais criptomoedas.',
+                        'Marketplace.',
+                        'Correspondentes bancários.',
+                        'Arranjos de pagamentos.',
+                        'Sistema de pagamentos instantâneos (PIX).',
+                        'Segmentação e interações digitais.',
+                        'Transformação digital no Sistema Financeiro.'
+                    ]
+                },
+                {
+                    id: 'ingles',
+                    name: 'Língua Inglesa',
+                    priorityRank: 8,
+                    weightLabel: 'Baixo',
+                    weeklyGoal: 2,
+                    goalMode: 'topics',
+                    topics: [
+                        'Conhecimento de um vocabulário fundamental e dos aspectos gramaticais básicos para a compreensão de textos.'
+                    ]
+                }
+            ]
+        };
+
+        // ========== STATE MANAGEMENT ==========
+        let appState = {
+            subjects: [],
+            currentTab: 'dashboard'
+        };
+
+        // ========== UTILITY FUNCTIONS ==========
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        function formatDate(date) {
+            return new Intl.DateTimeFormat('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(date);
+        }
+
+        function getWeekStart(date = new Date()) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Monday = start of week
+            return new Date(d.setDate(diff));
+        }
+
+        function isInCurrentWeek(date) {
+            const weekStart = getWeekStart();
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            weekEnd.setHours(23, 59, 59, 999);
+            
+            const checkDate = new Date(date);
+            return checkDate >= weekStart && checkDate <= weekEnd;
+        }
+
+        // ========== DATA PERSISTENCE ==========
+        function saveData() {
+            localStorage.setItem('bb-estudos-data', JSON.stringify(appState));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('bb-estudos-data');
+            if (saved) {
+                try {
+                    appState = JSON.parse(saved);
+                    // Ensure all subjects have required fields
+                    appState.subjects.forEach(subject => {
+                        if (!subject.weeklyGoal) subject.weeklyGoal = 5;
+                        if (!subject.goalMode) subject.goalMode = 'topics';
+                        if (!subject.priorityRank) subject.priorityRank = 999;
+                        if (!subject.weightLabel) subject.weightLabel = 'Médio';
+                        
+                        subject.topics.forEach(topic => {
+                            if (!topic.id) topic.id = generateId();
+                            if (!topic.status) topic.status = 'not-started';
+                            if (!topic.reviewHistory) topic.reviewHistory = [];
+                        });
+                    });
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    initializeData();
+                }
+            } else {
+                initializeData();
+            }
+        }
+
+        function initializeData() {
+            appState.subjects = INITIAL_DATA.subjects.map(subject => ({
+                ...subject,
+                topics: subject.topics.map((topicText, index) => ({
+                    id: generateId(),
+                    number: index + 1,
+                    text: topicText,
+                    status: 'not-started',
+                    updatedAt: null,
+                    notes: '',
+                    reviewDueAt: null,
+                    reviewHistory: []
+                }))
+            }));
+            saveData();
+        }
+
+        // ========== STATUS MANAGEMENT ==========
+        function updateTopicStatus(subjectId, topicId, status) {
+            const subject = appState.subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            
+            const topic = subject.topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            topic.status = status;
+            topic.updatedAt = new Date().toISOString();
+            
+            saveData();
+            updateUI();
+        }
+
+        function scheduleReview(subjectId, topicId, days) {
+            const subject = appState.subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            
+            const topic = subject.topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            const reviewDate = new Date();
+            reviewDate.setDate(reviewDate.getDate() + days);
+            
+            topic.reviewDueAt = reviewDate.toISOString();
+            topic.reviewHistory.push({
+                action: 'scheduled',
+                days: days,
+                at: new Date().toISOString()
+            });
+            
+            saveData();
+            updateUI();
+        }
+
+        function completeReview(subjectId, topicId) {
+            const subject = appState.subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            
+            const topic = subject.topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            topic.reviewHistory.push({
+                action: 'done',
+                at: new Date().toISOString()
+            });
+            
+            // Clear review due date
+            topic.reviewDueAt = null;
+            
+            saveData();
+            updateUI();
+        }
+
+        function removeReview(subjectId, topicId) {
+            const subject = appState.subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            
+            const topic = subject.topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            topic.reviewDueAt = null;
+            
+            saveData();
+            updateUI();
+        }
+
+        // ========== UI FUNCTIONS ==========
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            appState.currentTab = tabName;
+            updateUI();
+        }
+
+        function updateUI() {
+            updateDashboard();
+            updateSubjectsList();
+            updateReviewTab();
+            updateSubjectFilter();
+        }
+
+        function updateDashboard() {
+            updateStats();
+            updateWeeklyGoals();
+            updateReviewQueue();
+            updateSubjectProgress();
+        }
+
+        function updateStats() {
+            const totalTopics = appState.subjects.reduce((sum, s) => sum + s.topics.length, 0);
+            const completedTopics = appState.subjects.reduce((sum, s) => 
+                sum + s.topics.filter(t => t.status === 'completed').length, 0);
+            const reviewPending = getReviewQueue().length;
+            
+            const progressPercent = totalTopics ? Math.round((completedTopics / totalTopics) * 100) : 0;
+            
+            document.getElementById('total-progress').textContent = progressPercent + '%';
+            document.getElementById('total-progress-bar').style.width = progressPercent + '%';
+            document.getElementById('completed-count').textContent = completedTopics;
+            document.getElementById('review-count').textContent = reviewPending;
+            
+            // Weekly progress
+            const weeklyProgress = calculateWeeklyProgress();
+            const weeklyPercent = Math.round(weeklyProgress.percentage);
+            document.getElementById('weekly-progress').textContent = weeklyPercent + '%';
+            document.getElementById('weekly-progress-bar').style.width = weeklyPercent + '%';
+        }
+
+        function calculateWeeklyProgress() {
+            let totalGoal = 0;
+            let totalAchieved = 0;
+            
+            appState.subjects.forEach(subject => {
+                totalGoal += subject.weeklyGoal || 0;
+                
+                if (subject.goalMode === 'topics') {
+                    // Count topics completed this week
+                    const completedThisWeek = subject.topics.filter(topic => 
+                        topic.status === 'completed' && 
+                        topic.updatedAt && 
+                        isInCurrentWeek(new Date(topic.updatedAt))
+                    ).length;
+                    totalAchieved += completedThisWeek;
+                } else {
+                    // Count reviews done this week
+                    const reviewsDoneThisWeek = subject.topics.reduce((sum, topic) => {
+                        const weekReviews = (topic.reviewHistory || []).filter(review => 
+                            review.action === 'done' && 
+                            isInCurrentWeek(new Date(review.at))
+                        ).length;
+                        return sum + weekReviews;
+                    }, 0);
+                    totalAchieved += reviewsDoneThisWeek;
+                }
+            });
+            
+            return {
+                achieved: totalAchieved,
+                goal: totalGoal,
+                percentage: totalGoal ? (totalAchieved / totalGoal) * 100 : 0
+            };
+        }
+
+        function updateWeeklyGoals() {
+            const container = document.getElementById('weekly-goals-container');
+            container.innerHTML = '';
+            
+            appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .forEach(subject => {
+                    let achieved = 0;
+                    
+                    if (subject.goalMode === 'topics') {
+                        achieved = subject.topics.filter(topic => 
+                            topic.status === 'completed' && 
+                            topic.updatedAt && 
+                            isInCurrentWeek(new Date(topic.updatedAt))
+                        ).length;
+                    } else {
+                        achieved = subject.topics.reduce((sum, topic) => {
+                            const weekReviews = (topic.reviewHistory || []).filter(review => 
+                                review.action === 'done' && 
+                                isInCurrentWeek(new Date(review.at))
+                            ).length;
+                            return sum + weekReviews;
+                        }, 0);
+                    }
+                    
+                    const progress = subject.weeklyGoal ? (achieved / subject.weeklyGoal) * 100 : 0;
+                    const modeLabel = subject.goalMode === 'topics' ? 'tópicos' : 'revisões';
+                    
+                    const goalItem = document.createElement('div');
+                    goalItem.className = 'goal-item';
+                    goalItem.innerHTML = `
+                        <div class="goal-header">
+                            <div class="goal-title">${subject.name}</div>
+                            <div class="goal-progress">${achieved}/${subject.weeklyGoal}</div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: ${Math.min(progress, 100)}%"></div>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            Meta: ${subject.weeklyGoal} ${modeLabel}/semana
+                        </div>
+                    `;
+                    
+                    container.appendChild(goalItem);
+                });
+        }
+
+        function getReviewQueue() {
+            const queue = [];
+            const now = new Date();
+            
+            appState.subjects.forEach(subject => {
+                subject.topics.forEach(topic => {
+                    if (topic.reviewDueAt) {
+                        const dueDate = new Date(topic.reviewDueAt);
+                        const isOverdue = dueDate < now;
+                        const isToday = dueDate.toDateString() === now.toDateString();
+                        
+                        if (isOverdue || isToday) {
+                            queue.push({
+                                subject,
+                                topic,
+                                dueDate,
+                                isOverdue,
+                                isToday
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Sort: overdue first (oldest first), then today, then by subject priority
+            queue.sort((a, b) => {
+                if (a.isOverdue && !b.isOverdue) return -1;
+                if (!a.isOverdue && b.isOverdue) return 1;
+                if (a.isOverdue && b.isOverdue) return a.dueDate - b.dueDate;
+                if (a.isToday && !b.isToday) return -1;
+                if (!a.isToday && b.isToday) return 1;
+                return a.subject.priorityRank - b.subject.priorityRank;
+            });
+            
+            return queue;
+        }
+
+        function updateReviewQueue() {
+            const container = document.getElementById('review-queue-container');
+            const queue = getReviewQueue();
+            
+            if (queue.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">🎉 Nenhuma revisão pendente!</p>';
+                return;
+            }
+            
+            container.innerHTML = queue.map(item => {
+                const statusClass = item.isOverdue ? 'overdue' : (item.isToday ? 'today' : '');
+                const statusText = item.isOverdue ? '⏰ Atrasada' : '📅 Hoje';
+                
+                return `
+                    <div class="queue-item ${statusClass}">
+                        <div class="queue-subject">${item.subject.name}</div>
+                        <div class="queue-topic">${item.topic.number} - ${item.topic.text}</div>
+                        <div class="review-badge ${statusClass}">${statusText}</div>
+                        <div class="queue-actions">
+                            <button class="btn btn-outline btn-xs" onclick="completeReview('${item.subject.id}', '${item.topic.id}')">
+                                ✅ Feita
+                            </button>
+                            <button class="btn btn-outline btn-xs" onclick="removeReview('${item.subject.id}', '${item.topic.id}')">
+                                ❌ Remover
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateSubjectProgress() {
+            const container = document.getElementById('subject-progress-container');
+            
+            const subjectsWithProgress = appState.subjects
+                .map(subject => {
+                    const total = subject.topics.length;
+                    const completed = subject.topics.filter(t => t.status === 'completed').length;
+                    const progress = total ? (completed / total) * 100 : 0;
+                    
+                    return {
+                        ...subject,
+                        total,
+                        completed,
+                        progress
+                    };
+                })
+                .sort((a, b) => a.priorityRank - b.priorityRank);
+            
+            container.innerHTML = subjectsWithProgress.map(subject => `
+                <div style="margin-bottom: 1rem;">
+                    <div class="d-flex justify-between align-center" style="margin-bottom: 0.5rem;">
+                        <span style="font-weight: 500;">${subject.name}</span>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">
+                            ${subject.completed}/${subject.total} (${Math.round(subject.progress)}%)
+                        </span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: ${subject.progress}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSubjectsList() {
+            const container = document.getElementById('subjects-container');
+            container.innerHTML = '';
+            
+            const sortedSubjects = [...appState.subjects].sort((a, b) => a.priorityRank - b.priorityRank);
+            
+            sortedSubjects.forEach(subject => {
+                const subjectElement = createSubjectElement(subject);
+                container.appendChild(subjectElement);
+            });
+        }
+
+        function createSubjectElement(subject) {
+            const total = subject.topics.length;
+            const completed = subject.topics.filter(t => t.status === 'completed').length;
+            const progress = total ? (completed / total) * 100 : 0;
+            
+            const subjectDiv = document.createElement('div');
+            subjectDiv.className = 'subject-item';
+            subjectDiv.innerHTML = `
+                <div class="subject-header" onclick="toggleSubject('${subject.id}')">
+                    <div class="subject-info">
+                        <div class="subject-title">${subject.name}</div>
+                        <div class="subject-meta">
+                            <span>🏆 Prioridade ${subject.priorityRank}</span>
+                            <span>📊 ${subject.weightLabel}</span>
+                            <span>🎯 Meta: ${subject.weeklyGoal} ${subject.goalMode === 'topics' ? 'tópicos' : 'revisões'}/semana</span>
+                        </div>
+                    </div>
+                    <div class="subject-stats">
+                        <div class="subject-stats-number">
+                            ${completed}/${total} (${Math.round(progress)}%)
+                        </div>
+                        <div class="progress" style="width: 120px;">
+                            <div class="progress-bar" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="subject-content">
+                    <div class="topic-list">
+                        ${subject.topics.map(topic => createTopicHTML(subject, topic)).join('')}
+                    </div>
+                </div>
+            `;
+            
+            return subjectDiv;
+        }
+
+        function createTopicHTML(subject, topic) {
+            const statusConfig = {
+                'not-started': { label: 'Não iniciado', class: 'status-not-started' },
+                'in-progress': { label: 'Em andamento', class: 'status-in-progress' },
+                'review': { label: 'Revisar', class: 'status-review' },
+                'completed': { label: 'Concluído', class: 'status-completed' }
+            };
+            
+            const status = statusConfig[topic.status] || statusConfig['not-started'];
+            
+            // Review badge
+            let reviewBadge = '';
+            if (topic.reviewDueAt) {
+                const dueDate = new Date(topic.reviewDueAt);
+                const now = new Date();
+                const isOverdue = dueDate < now;
+                const isToday = dueDate.toDateString() === now.toDateString();
+                
+                if (isOverdue) {
+                    reviewBadge = '<div class="review-badge review-overdue">Revisão atrasada</div>';
+                } else if (isToday) {
+                    reviewBadge = '<div class="review-badge review-today">Revisão hoje</div>';
+                } else {
+                    const days = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+                    reviewBadge = `<div class="review-badge review-upcoming">Revisão em ${days}d</div>`;
+                }
+            }
+            
+            return `
+                <div class="topic-item" data-subject="${subject.id}" data-topic="${topic.id}">
+                    <div class="topic-number">${topic.number}</div>
+                    <div class="topic-text">${topic.text}</div>
+                    <div class="topic-actions">
+                        <!-- Status buttons -->
+                        <button class="btn btn-xs ${topic.status === 'not-started' ? 'btn-primary' : 'btn-outline'}" 
+                                onclick="updateTopicStatus('${subject.id}', '${topic.id}', 'not-started')"
+                                title="Marcar como Não iniciado">⭕</button>
+                        <button class="btn btn-xs ${topic.status === 'in-progress' ? 'btn-primary' : 'btn-outline'}" 
+                                onclick="updateTopicStatus('${subject.id}', '${topic.id}', 'in-progress')"
+                                title="Marcar como Em andamento">🔄</button>
+                        <button class="btn btn-xs ${topic.status === 'review' ? 'btn-primary' : 'btn-outline'}" 
+                                onclick="updateTopicStatus('${subject.id}', '${topic.id}', 'review')"
+                                title="Marcar como Revisar">📚</button>
+                        <button class="btn btn-xs ${topic.status === 'completed' ? 'btn-primary' : 'btn-outline'}" 
+                                onclick="updateTopicStatus('${subject.id}', '${topic.id}', 'completed')"
+                                title="Marcar como Concluído">✅</button>
+                        
+                        <!-- Review scheduling -->
+                        <button class="btn btn-outline btn-xs" 
+                                onclick="scheduleReview('${subject.id}', '${topic.id}', 1)"
+                                title="Revisar em 1 dia">1d</button>
+                        <button class="btn btn-outline btn-xs" 
+                                onclick="scheduleReview('${subject.id}', '${topic.id}', 7)"
+                                title="Revisar em 7 dias">7d</button>
+                        <button class="btn btn-outline btn-xs" 
+                                onclick="scheduleReview('${subject.id}', '${topic.id}', 15)"
+                                title="Revisar em 15 dias">15d</button>
+                        <button class="btn btn-outline btn-xs" 
+                                onclick="scheduleReview('${subject.id}', '${topic.id}', 30)"
+                                title="Revisar em 30 dias">30d</button>
+                    </div>
+                    <div class="topic-meta">
+                        <div class="status-badge ${status.class}">${status.label}</div>
+                        ${reviewBadge}
+                        ${topic.updatedAt ? `<div style="font-size: 0.7rem;">${formatDate(new Date(topic.updatedAt))}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleSubject(subjectId) {
+            const subjectElement = event.currentTarget.closest('.subject-item');
+            subjectElement.classList.toggle('expanded');
+        }
+
+        function updateReviewTab() {
+            const container = document.getElementById('full-review-container');
+            const allReviews = [];
+            
+            appState.subjects.forEach(subject => {
+                subject.topics.forEach(topic => {
+                    if (topic.reviewDueAt || (topic.reviewHistory && topic.reviewHistory.length > 0)) {
+                        allReviews.push({
+                            subject,
+                            topic
+                        });
+                    }
+                });
+            });
+            
+            if (allReviews.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">📅 Nenhuma revisão agendada ainda.</p>';
+                return;
+            }
+            
+            // Group by subject
+            const bySubject = {};
+            allReviews.forEach(item => {
+                if (!bySubject[item.subject.id]) {
+                    bySubject[item.subject.id] = {
+                        subject: item.subject,
+                        topics: []
+                    };
+                }
+                bySubject[item.subject.id].topics.push(item.topic);
+            });
+            
+            container.innerHTML = Object.values(bySubject).map(group => `
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div class="card-header">
+                        <h4>${group.subject.name}</h4>
+                    </div>
+                    <div class="card-body">
+                        ${group.topics.map(topic => {
+                            let reviewInfo = '';
+                            if (topic.reviewDueAt) {
+                                const dueDate = new Date(topic.reviewDueAt);
+                                const now = new Date();
+                                const isOverdue = dueDate < now;
+                                const isToday = dueDate.toDateString() === now.toDateString();
+                                
+                                if (isOverdue) {
+                                    reviewInfo = `<span class="review-badge review-overdue">Atrasada - ${formatDate(dueDate)}</span>`;
+                                } else if (isToday) {
+                                    reviewInfo = `<span class="review-badge review-today">Hoje - ${formatDate(dueDate)}</span>`;
+                                } else {
+                                    reviewInfo = `<span class="review-badge review-upcoming">${formatDate(dueDate)}</span>`;
+                                }
+                            }
+                            
+                            const lastReview = (topic.reviewHistory || []).filter(r => r.action === 'done').pop();
+                            const lastReviewText = lastReview ? `Última revisão: ${formatDate(new Date(lastReview.at))}` : 'Nunca revisado';
+                            
+                            return `
+                                <div class="topic-item" style="margin-bottom: 0.5rem;">
+                                    <div class="topic-number">${topic.number}</div>
+                                    <div class="topic-text">${topic.text}</div>
+                                    <div style="display: flex; flex-direction: column; gap: 0.25rem; align-items: end;">
+                                        ${reviewInfo}
+                                        <div style="font-size: 0.7rem; color: var(--text-muted);">${lastReviewText}</div>
+                                    </div>
+                                    <div class="topic-actions">
+                                        ${topic.reviewDueAt ? `
+                                            <button class="btn btn-outline btn-xs" onclick="completeReview('${group.subject.id}', '${topic.id}')">✅ Feita</button>
+                                            <button class="btn btn-outline btn-xs" onclick="removeReview('${group.subject.id}', '${topic.id}')">❌ Remover</button>
+                                        ` : ''}
+                                        <button class="btn btn-outline btn-xs" onclick="scheduleReview('${group.subject.id}', '${topic.id}', 7)">+7d</button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSubjectFilter() {
+            const select = document.getElementById('subject-filter');
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Todas as matérias</option>';
+            
+            appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = subject.name;
+                    select.appendChild(option);
+                });
+                
+            select.value = currentValue;
+        }
+
+        // ========== FILTERING ==========
+        function filterTopics() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const subjectFilter = document.getElementById('subject-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            document.querySelectorAll('.subject-item').forEach(subjectElement => {
+                const subjectId = subjectElement.querySelector('.topic-item')?.dataset.subject;
+                let subjectHasVisibleTopics = false;
+                
+                // If subject filter is active and doesn't match, hide entire subject
+                if (subjectFilter && subjectId !== subjectFilter) {
+                    subjectElement.style.display = 'none';
+                    return;
+                }
+                
+                subjectElement.querySelectorAll('.topic-item').forEach(topicElement => {
+                    const topicText = topicElement.querySelector('.topic-text').textContent.toLowerCase();
+                    const topicStatus = topicElement.dataset.status || 
+                                      topicElement.querySelector('.status-badge').className.split(' ')[1].replace('status-', '');
+                    
+                    let shouldShow = true;
+                    
+                    // Apply filters
+                    if (searchTerm && !topicText.includes(searchTerm)) {
+                        shouldShow = false;
+                    }
+                    
+                    if (statusFilter && topicStatus !== statusFilter) {
+                        shouldShow = false;
+                    }
+                    
+                    topicElement.style.display = shouldShow ? 'flex' : 'none';
+                    
+                    if (shouldShow) {
+                        subjectHasVisibleTopics = true;
+                    }
+                });
+                
+                subjectElement.style.display = subjectHasVisibleTopics ? 'block' : 'none';
+            });
+        }
+
+        // ========== BULK ACTIONS ==========
+        function markAllCompleted() {
+            if (!confirm('Marcar todos os tópicos visíveis como concluídos?')) return;
+            
+            document.querySelectorAll('.topic-item').forEach(topicElement => {
+                if (topicElement.style.display !== 'none') {
+                    const subjectId = topicElement.dataset.subject;
+                    const topicId = topicElement.dataset.topic;
+                    updateTopicStatus(subjectId, topicId, 'completed');
+                }
+            });
+        }
+
+        function resetProgress() {
+            if (!confirm('⚠️ Isso vai apagar TODO o progresso. Continuar?')) return;
+            
+            appState.subjects.forEach(subject => {
+                subject.topics.forEach(topic => {
+                    topic.status = 'not-started';
+                    topic.updatedAt = null;
+                    topic.notes = '';
+                    topic.reviewDueAt = null;
+                    topic.reviewHistory = [];
+                });
+            });
+            
+            saveData();
+            updateUI();
+        }
+
+        // ========== GOALS MANAGEMENT ==========
+        function showGoalsModal() {
+            const modal = document.getElementById('goals-modal');
+            const container = document.getElementById('goals-form-container');
+            
+            container.innerHTML = appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .map(subject => `
+                    <div class="form-row" style="margin-bottom: 1rem;">
+                        <div class="form-group" style="flex: 2;">
+                            <label class="form-label">${subject.name}</label>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Prioridade ${subject.priorityRank} - ${subject.weightLabel}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quantidade</label>
+                            <input type="number" class="form-input" id="goal-${subject.id}" 
+                                   value="${subject.weeklyGoal}" min="0" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-input" id="mode-${subject.id}">
+                                <option value="topics" ${subject.goalMode === 'topics' ? 'selected' : ''}>Tópicos concluídos</option>
+                                <option value="reviews" ${subject.goalMode === 'reviews' ? 'selected' : ''}>Revisões feitas</option>
+                            </select>
+                        </div>
+                    </div>
+                `).join('');
+            
+            modal.classList.add('show');
+        }
+
+        function saveGoals() {
+            appState.subjects.forEach(subject => {
+                const goalInput = document.getElementById(`goal-${subject.id}`);
+                const modeSelect = document.getElementById(`mode-${subject.id}`);
+                
+                if (goalInput && modeSelect) {
+                    subject.weeklyGoal = parseInt(goalInput.value) || 0;
+                    subject.goalMode = modeSelect.value;
+                }
+            });
+            
+            saveData();
+            closeModal('goals-modal');
+            updateUI();
+        }
+
+        // ========== IMPORT/EXPORT ==========
+        function exportData() {
+            const dataStr = JSON.stringify(appState, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bb-estudos-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function showImportModal() {
+            document.getElementById('import-modal').classList.add('show');
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('import-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Por favor, selecione um arquivo JSON.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!data.subjects || !Array.isArray(data.subjects)) {
+                        throw new Error('Formato de arquivo inválido');
+                    }
+                    
+                    appState = data;
+                    saveData();
+                    updateUI();
+                    
+                    closeModal('import-modal');
+                    alert('✅ Dados importados com sucesso!');
+                } catch (error) {
+                    alert('❌ Erro ao importar arquivo: ' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // ========== MODAL MANAGEMENT ==========
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+
+        // ========== KEYBOARD NAVIGATION ==========
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(modal => {
+                    modal.classList.remove('show');
+                });
+            }
+        });
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
