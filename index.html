@@ -963,6 +963,104 @@
         .align-center { align-items: center; }
         .justify-between { justify-content: space-between; }
         .gap-1 { gap: 0.5rem; }
+        
+        /* ========== ERROR COMPONENTS ========== */
+        .error-card {
+            padding: var(--spacing-lg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            background: var(--surface);
+            margin-bottom: var(--spacing-sm);
+            transition: var(--transition);
+        }
+        
+        .error-card:hover {
+            box-shadow: var(--shadow);
+        }
+        
+        .error-card.due {
+            border-left: 4px solid var(--warning);
+            background: #FFFBEB;
+        }
+        
+        .error-card.overdue {
+            border-left: 4px solid var(--danger);
+            background: #FEF2F2;
+        }
+        
+        .error-card.resolved {
+            opacity: 0.7;
+            border-left: 4px solid var(--success);
+        }
+        
+        .error-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .error-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .error-details {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .error-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+            flex-wrap: wrap;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background: var(--surface-hover);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-light);
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
     </style>
 </head>
 <body>
@@ -971,10 +1069,10 @@
         <div class="container">
             <div class="header-content">
                 <div class="header-title">
-                    <div class="header-emoji">📚</div>
+                    <div class="header-emoji">📖</div>
                     <div class="header-text">
                         <h1>Cronograma de Estudos</h1>
-                        <div class="header-subtitle">Acompanhe seu progresso.</div>
+                        <div class="header-subtitle">Acompanhe seu progresso</div>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -1015,6 +1113,8 @@
                 <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
                 <button class="tab-btn" onclick="switchTab('subjects')">📋 Matérias</button>
                 <button class="tab-btn" onclick="switchTab('review')">🔄 Revisões</button>
+                <button class="tab-btn" onclick="switchTab('questions')">🧠 Questões</button>
+                <button class="tab-btn" onclick="switchTab('errors')">📝 Caderno de Erros</button>
             </div>
 
             <!-- DASHBOARD TAB -->
@@ -1045,6 +1145,25 @@
                     </div>
                 </div>
 
+                <!-- NEW STATS GRID -->
+                <div class="dashboard-grid">
+                    <div class="card stats-card">
+                        <div class="stats-number" id="questions-7d-count">0</div>
+                        <div class="stats-label">🧠 Questões (7 dias)</div>
+                        <div style="font-size: 0.75rem; margin-top: 0.5rem;">
+                            <div id="questions-7d-accuracy">Acerto: 0%</div>
+                            <div id="questions-7d-today">Hoje: 0 feitas</div>
+                        </div>
+                    </div>
+                    <div class="card stats-card">
+                        <div class="stats-number" id="study-time-week">0min</div>
+                        <div class="stats-label">⏱️ Estudo (Semana)</div>
+                        <div style="font-size: 0.75rem; margin-top: 0.5rem;">
+                            <div id="top-subject-week">Top: Nenhuma</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- WEEKLY GOALS -->
                 <div class="card">
                     <div class="card-header">
@@ -1054,6 +1173,35 @@
                         <div class="weekly-goals" id="weekly-goals-container">
                             <!-- Populated by JS -->
                         </div>
+                    </div>
+                </div>
+
+                <!-- STUDY TIME TRACKER -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⏱️ Registrar Tempo de Estudo</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="study-time-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Matéria</label>
+                                    <select class="form-input" id="study-subject" required>
+                                        <!-- Populated by JS -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tempo (minutos)</label>
+                                    <input type="number" class="form-input" id="study-minutes" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Notas (opcional)</label>
+                                    <input type="text" class="form-input" id="study-notes" placeholder="Ex: Revisão, exercícios...">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">⏱️ Salvar Tempo</button>
+                            <div id="study-time-feedback" style="margin-top: var(--spacing-sm); font-size: 0.875rem; color: var(--primary);"></div>
+                        </form>
                     </div>
                 </div>
 
@@ -1125,6 +1273,141 @@
                     </div>
                     <div class="card-body">
                         <div id="full-review-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS TAB -->
+            <div id="questions-tab" class="tab-content">
+                <!-- SUBJECT SELECTOR -->
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">📚 Selecione a matéria:</label>
+                            <select class="form-input" id="questions-subject-select" onchange="renderQuestionsView()">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REGISTER QUESTIONS -->
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="card-header">
+                        <h3>📝 Registrar Questões</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="question-log-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Questões Feitas *</label>
+                                    <input type="number" class="form-input" id="questions-done" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Acertos *</label>
+                                    <input type="number" class="form-input" id="questions-correct" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Erros (opcional)</label>
+                                    <input type="number" class="form-input" id="questions-errors" min="0" 
+                                           placeholder="Se vazio, será calculado automaticamente">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Fonte (opcional)</label>
+                                    <input type="text" class="form-input" id="questions-source" 
+                                           placeholder="Ex: Qconcursos, Cesgranrio, PDF...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Questão que errei / Erro típico</label>
+                                <textarea class="form-input" id="questions-error-text" rows="3" 
+                                          placeholder="Descreva a questão ou tipo de erro que você cometeu..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">✅ Salvar</button>
+                            <div id="questions-feedback" style="margin-top: var(--spacing-sm); font-size: 0.875rem; color: var(--primary);"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- SUBJECT STATS -->
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="card-header">
+                        <h3>📊 Estatísticas da Matéria</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="questions-stats-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUESTION HISTORY -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📈 Últimos Registros</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="question-history-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ERRORS TAB -->
+            <div id="errors-tab" class="tab-content">
+                <!-- SUBJECT SELECTOR -->
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">📚 Selecione a matéria:</label>
+                            <select class="form-input" id="errors-subject-select" onchange="renderErrorsView()">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REGISTER ERROR -->
+                <div class="card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="card-header">
+                        <h3>📝 Registrar Erro</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="error-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Quantidade de Erros</label>
+                                    <input type="number" class="form-input" id="error-count" min="1" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Fonte (opcional)</label>
+                                    <input type="text" class="form-input" id="error-source" 
+                                           placeholder="Ex: Qconcursos, Cesgranrio, PDF...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Texto da Questão / Erro *</label>
+                                <textarea class="form-input" id="error-text" rows="4" required
+                                          placeholder="Descreva a questão que errou ou o tipo de erro..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">✅ Salvar Erro</button>
+                            <div id="errors-feedback" style="margin-top: var(--spacing-sm); font-size: 0.875rem; color: var(--primary);"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ERRORS LIST -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📝 Erros Recentes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="errors-list-container">
                             <!-- Populated by JS -->
                         </div>
                     </div>
@@ -1404,25 +1687,49 @@
             if (saved) {
                 try {
                     appState = JSON.parse(saved);
-                    // Ensure all subjects have required fields
-                    appState.subjects.forEach(subject => {
-                        if (!subject.weeklyGoal) subject.weeklyGoal = 5;
-                        if (!subject.goalMode) subject.goalMode = 'topics';
-                        if (!subject.priorityRank) subject.priorityRank = 999;
-                        if (!subject.weightLabel) subject.weightLabel = 'Médio';
-                        
-                        subject.topics.forEach(topic => {
-                            if (!topic.id) topic.id = generateId();
-                            if (!topic.status) topic.status = 'not-started';
-                            if (!topic.reviewHistory) topic.reviewHistory = [];
-                        });
-                    });
+                    normalizeState();
                 } catch (e) {
                     console.error('Error loading data:', e);
                     initializeData();
                 }
             } else {
                 initializeData();
+            }
+        }
+        
+        function normalizeState() {
+            // Ensure all subjects have required fields
+            appState.subjects.forEach(subject => {
+                if (!subject.weeklyGoal) subject.weeklyGoal = 5;
+                if (!subject.goalMode) subject.goalMode = 'topics';
+                if (!subject.priorityRank) subject.priorityRank = 999;
+                if (!subject.weightLabel) subject.weightLabel = 'Médio';
+                
+                subject.topics.forEach(topic => {
+                    if (!topic.id) topic.id = generateId();
+                    if (!topic.status) topic.status = 'not-started';
+                    if (!topic.reviewHistory) topic.reviewHistory = [];
+                });
+                
+                // Clean up any old complex questions structure
+                if (subject.questions) {
+                    delete subject.questions;
+                }
+            });
+            
+            // Ensure questionLogs array exists
+            if (!appState.questionLogs) {
+                appState.questionLogs = [];
+            }
+            
+            // Ensure errorEntries array exists
+            if (!appState.errorEntries) {
+                appState.errorEntries = [];
+            }
+            
+            // Ensure studySessions array exists
+            if (!appState.studySessions) {
+                appState.studySessions = [];
             }
         }
 
@@ -1440,6 +1747,9 @@
                     reviewHistory: []
                 }))
             }));
+            appState.questionLogs = [];
+            appState.errorEntries = [];
+            appState.studySessions = [];
             saveData();
         }
 
@@ -1515,11 +1825,26 @@
         function switchTab(tabName) {
             // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Find the correct button - try by onclick first, then by content
+            let activeBtn = null;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const onclick = btn.getAttribute('onclick');
+                if (onclick && onclick.includes(`'${tabName}'`)) {
+                    activeBtn = btn;
+                }
+            });
+            
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
             
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName + '-tab').classList.add('active');
+            const targetTab = document.getElementById(tabName + '-tab');
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
             
             appState.currentTab = tabName;
             updateUI();
@@ -1530,6 +1855,12 @@
             updateSubjectsList();
             updateReviewTab();
             updateSubjectFilter();
+            if (appState.currentTab === 'questions') {
+                updateQuestionsUI();
+            }
+            if (appState.currentTab === 'errors') {
+                updateErrorsUI();
+            }
         }
 
         function updateDashboard() {
@@ -1537,6 +1868,28 @@
             updateWeeklyGoals();
             updateReviewQueue();
             updateSubjectProgress();
+            updateStudySubjectSelector();
+        }
+        
+        function updateStudySubjectSelector() {
+            const select = document.getElementById('study-subject');
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Selecione uma matéria</option>';
+            
+            appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = subject.name;
+                    select.appendChild(option);
+                });
+            
+            if (currentValue) {
+                select.value = currentValue;
+            }
         }
 
         function updateStats() {
@@ -1557,6 +1910,35 @@
             const weeklyPercent = Math.round(weeklyProgress.percentage);
             document.getElementById('weekly-progress').textContent = weeklyPercent + '%';
             document.getElementById('weekly-progress-bar').style.width = weeklyPercent + '%';
+            
+            // NEW: Question stats (7 days)
+            const range7d = getDateRange(7);
+            const logs7d = getLogsInRange(range7d.start, range7d.end);
+            const stats7d = getQuestionStatsInRange(logs7d);
+            
+            document.getElementById('questions-7d-count').textContent = stats7d.totalFeitas;
+            document.getElementById('questions-7d-accuracy').textContent = `Acerto: ${stats7d.accuracy}%`;
+            
+            // Today questions
+            const todayRange = getTodayRange();
+            const todayLogs = getLogsInRange(todayRange.start, todayRange.end);
+            const todayStats = getQuestionStatsInRange(todayLogs);
+            document.getElementById('questions-7d-today').textContent = `Hoje: ${todayStats.totalFeitas} feitas`;
+            
+            // NEW: Study time stats (week)
+            const weekRange = getDateRange(7);
+            const weekMinutes = getStudyMinutesInRange(weekRange.start, weekRange.end);
+            const subjectMinutes = getStudyMinutesBySubjectInRange(weekRange.start, weekRange.end);
+            
+            document.getElementById('study-time-week').textContent = formatMinutes(weekMinutes);
+            
+            if (subjectMinutes.length > 0) {
+                const topSubject = subjectMinutes[0];
+                document.getElementById('top-subject-week').textContent = 
+                    `Top: ${topSubject.subjectName} (${formatMinutes(topSubject.minutes)})`;
+            } else {
+                document.getElementById('top-subject-week').textContent = 'Top: Nenhuma';
+            }
         }
 
         function calculateWeeklyProgress() {
@@ -2125,6 +2507,7 @@
                     }
                     
                     appState = data;
+                    normalizeState();
                     saveData();
                     updateUI();
                     
@@ -2159,14 +2542,557 @@
             }
         });
 
-        // ========== INITIALIZATION ==========
+        // ========== QUESTIONS MODULE ==========
+        function updateQuestionsUI() {
+            updateQuestionsSubjectSelector();
+            renderQuestionsView();
+        }
+        
+        function updateQuestionsSubjectSelector() {
+            const select = document.getElementById('questions-subject-select');
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = '';
+            
+            appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .forEach(subject => {
+                    const stats = getSubjectQuestionStats(subject.id);
+                    
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = `${subject.name} • ${stats.total} questões • ${stats.accuracy}%`;
+                    select.appendChild(option);
+                });
+            
+            // Restore selection or select first
+            if (currentValue && appState.subjects.find(s => s.id === currentValue)) {
+                select.value = currentValue;
+            } else if (appState.subjects.length > 0) {
+                select.value = appState.subjects[0].id;
+            }
+        }
+        
+        function getSubjectQuestionStats(subjectId) {
+            const logs = (appState.questionLogs || []).filter(log => log.subjectId === subjectId);
+            const total = logs.reduce((sum, log) => sum + log.feitas, 0);
+            const totalCorrect = logs.reduce((sum, log) => sum + log.acertos, 0);
+            const accuracy = total > 0 ? Math.round((totalCorrect / total) * 100) : 0;
+            
+            return { total, totalCorrect, accuracy };
+        }
+        
+        function getSubjectErrorCountFromNotebook(subjectId) {
+            return (appState.errorEntries || [])
+                .filter(e => e.subjectId === subjectId)
+                .reduce((sum, e) => sum + (parseInt(e.erros) || 0), 0);
+        }
+
+        // ========== STATISTICS HELPER FUNCTIONS ==========
+        function getDateRange(daysBack) {
+            const end = new Date();
+            const start = new Date();
+            start.setDate(start.getDate() - daysBack);
+            start.setHours(0, 0, 0, 0);
+            return { start: start.toISOString(), end: end.toISOString() };
+        }
+
+        function getTodayRange() {
+            const today = new Date();
+            const start = new Date(today);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(today);
+            end.setHours(23, 59, 59, 999);
+            return { start: start.toISOString(), end: end.toISOString() };
+        }
+
+        function getLogsInRange(startDate, endDate) {
+            return (appState.questionLogs || []).filter(log => {
+                const logDate = new Date(log.date);
+                return logDate >= new Date(startDate) && logDate <= new Date(endDate);
+            });
+        }
+
+        function getQuestionStatsInRange(logs) {
+            const totalFeitas = logs.reduce((sum, log) => sum + (parseInt(log.feitas) || 0), 0);
+            const totalAcertos = logs.reduce((sum, log) => sum + (parseInt(log.acertos) || 0), 0);
+            const totalErros = logs.reduce((sum, log) => sum + (parseInt(log.erros) || 0), 0);
+            const accuracy = totalFeitas > 0 ? Math.round((totalAcertos / totalFeitas) * 100) : 0;
+            
+            return { totalFeitas, totalAcertos, totalErros, accuracy };
+        }
+
+        function getStudyMinutesInRange(start, end, subjectIdOptional = null) {
+            return (appState.studySessions || [])
+                .filter(session => {
+                    const sessionDate = new Date(session.date);
+                    const matchesDate = sessionDate >= new Date(start) && sessionDate <= new Date(end);
+                    const matchesSubject = !subjectIdOptional || session.subjectId === subjectIdOptional;
+                    return matchesDate && matchesSubject;
+                })
+                .reduce((sum, session) => sum + (parseInt(session.minutes) || 0), 0);
+        }
+
+        function getStudyMinutesBySubjectInRange(start, end) {
+            const subjectMinutes = {};
+            
+            (appState.studySessions || [])
+                .filter(session => {
+                    const sessionDate = new Date(session.date);
+                    return sessionDate >= new Date(start) && sessionDate <= new Date(end);
+                })
+                .forEach(session => {
+                    if (!subjectMinutes[session.subjectId]) {
+                        subjectMinutes[session.subjectId] = 0;
+                    }
+                    subjectMinutes[session.subjectId] += parseInt(session.minutes) || 0;
+                });
+
+            return Object.entries(subjectMinutes)
+                .map(([subjectId, minutes]) => {
+                    const subject = appState.subjects.find(s => s.id === subjectId);
+                    return {
+                        subjectId,
+                        subjectName: subject ? subject.name : 'Matéria removida',
+                        minutes
+                    };
+                })
+                .sort((a, b) => b.minutes - a.minutes);
+        }
+
+        function formatMinutes(minutes) {
+            if (minutes < 60) {
+                return `${minutes}min`;
+            }
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
+        }
+        
+        function renderQuestionsView() {
+            const selectedSubjectId = document.getElementById('questions-subject-select')?.value;
+            if (!selectedSubjectId) return;
+            
+            renderQuestionStats(selectedSubjectId);
+            renderQuestionHistory(selectedSubjectId);
+        }
+        
+        function renderQuestionStats(subjectId) {
+            const container = document.getElementById('questions-stats-container');
+            if (!container) return;
+            
+            const stats = getSubjectQuestionStats(subjectId);
+            
+            // Calculate errors from question logs
+            const totalErrorsFromLogs = (appState.questionLogs || [])
+                .filter(log => log.subjectId === subjectId)
+                .reduce((sum, log) => sum + (parseInt(log.erros) || 0), 0);
+            
+            // Calculate errors from notebook
+            const totalErrorsFromNotebook = getSubjectErrorCountFromNotebook(subjectId);
+            
+            // Total errors = logs + notebook
+            const totalErrors = totalErrorsFromLogs + totalErrorsFromNotebook;
+            
+            container.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.total}</div>
+                        <div class="stat-label">Total de Questões</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.totalCorrect}</div>
+                        <div class="stat-label">Acertos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${totalErrors}</div>
+                        <div class="stat-label">Erros</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.accuracy}%</div>
+                        <div class="stat-label">Taxa de Acerto</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderQuestionHistory(subjectId) {
+            const container = document.getElementById('question-history-container');
+            if (!container) return;
+            
+            const logs = (appState.questionLogs || [])
+                .filter(log => log.subjectId === subjectId)
+                .slice(0, 20); // Últimos 20 registros
+            
+            if (logs.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">📝 Nenhum registro encontrado</p>';
+                return;
+            }
+            
+            container.innerHTML = logs.map(log => `
+                <div class="error-card">
+                    <div class="error-header">
+                        <div class="error-title">
+                            📊 ${formatDate(new Date(log.date))}
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="font-size: 0.875rem; color: var(--text-muted);">
+                                ${log.feitas} feitas • ${log.acertos} acertos • ${log.erros} erros
+                            </div>
+                            <button class="btn btn-outline btn-xs" onclick="deleteQuestionLog('${log.id}')" 
+                                    style="color: var(--danger);" title="Excluir registro">🗑️</button>
+                        </div>
+                    </div>
+                    ${log.erroTexto ? `<div class="error-details">${log.erroTexto}</div>` : ''}
+                    ${log.fonte ? `<div style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.5rem;">Fonte: ${log.fonte}</div>` : ''}
+                </div>
+            `).join('');
+        }
+        
+        function saveQuestionLog(e) {
+            e.preventDefault();
+            
+            const selectedSubjectId = document.getElementById('questions-subject-select')?.value;
+            const feitas = parseInt(document.getElementById('questions-done').value) || 0;
+            const acertos = parseInt(document.getElementById('questions-correct').value) || 0;
+            const errosInput = document.getElementById('questions-errors').value;
+            const fonte = document.getElementById('questions-source').value.trim();
+            const erroTexto = document.getElementById('questions-error-text').value.trim();
+            
+            // Clear previous feedback
+            const feedback = document.getElementById('questions-feedback');
+            feedback.textContent = '';
+            
+            // Validation
+            if (!selectedSubjectId) {
+                feedback.textContent = '❌ Selecione uma matéria';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (feitas <= 0) {
+                feedback.textContent = '❌ Número de questões deve ser maior que 0';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (acertos > feitas) {
+                feedback.textContent = '❌ Acertos não podem ser maiores que o total de questões';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            // Calculate errors if not provided
+            let erros;
+            if (errosInput && errosInput.trim() !== '') {
+                erros = parseInt(errosInput) || 0;
+            } else {
+                erros = feitas - acertos;
+            }
+            
+            // Ensure questionLogs array exists
+            if (!appState.questionLogs) {
+                appState.questionLogs = [];
+            }
+            
+            // Create log entry
+            const log = {
+                id: generateId(),
+                subjectId: selectedSubjectId,
+                date: new Date().toISOString(),
+                feitas: feitas,
+                acertos: acertos,
+                erros: erros,
+                erroTexto: erroTexto,
+                fonte: fonte
+            };
+            
+            // Add to logs (most recent first)
+            appState.questionLogs.unshift(log);
+            
+            // Save data
+            saveData();
+            
+            // Update UI
+            updateQuestionsSubjectSelector();
+            renderQuestionsView();
+            
+            // Clear form
+            document.getElementById('question-log-form').reset();
+            
+            // Show success feedback
+            feedback.textContent = `✅ Registro salvo: ${feitas} questões, ${acertos} acertos, ${erros} erros`;
+            feedback.style.color = 'var(--primary)';
+            
+            // Clear feedback after 3 seconds
+            setTimeout(() => {
+                feedback.textContent = '';
+            }, 3000);
+        }
+        
+        function deleteQuestionLog(logId) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) return;
+            
+            if (!appState.questionLogs) return;
+            
+            // Remove the question log by ID
+            appState.questionLogs = appState.questionLogs.filter(log => log.id !== logId);
+            
+            // Save data
+            saveData();
+            
+            // Update Questions UI if on questions tab
+            if (appState.currentTab === 'questions') {
+                updateQuestionsSubjectSelector();
+                renderQuestionsView();
+            } else {
+                // If not on questions tab, still update the selector for consistency
+                updateQuestionsSubjectSelector();
+            }
+            
+            // Also update dashboard stats in case they show question data
+            updateStats();
+        }
+
+        // ========== ERRORS MODULE ==========
+        function updateErrorsUI() {
+            updateErrorsSubjectSelector();
+            renderErrorsView();
+        }
+        
+        function updateErrorsSubjectSelector() {
+            const select = document.getElementById('errors-subject-select');
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = '';
+            
+            appState.subjects
+                .sort((a, b) => a.priorityRank - b.priorityRank)
+                .forEach(subject => {
+                    const errorCount = (appState.errorEntries || []).filter(e => e.subjectId === subject.id).length;
+                    
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = `${subject.name} • ${errorCount} erros`;
+                    select.appendChild(option);
+                });
+            
+            // Restore selection or select first
+            if (currentValue && appState.subjects.find(s => s.id === currentValue)) {
+                select.value = currentValue;
+            } else if (appState.subjects.length > 0) {
+                select.value = appState.subjects[0].id;
+            }
+        }
+        
+        function renderErrorsView() {
+            const selectedSubjectId = document.getElementById('errors-subject-select')?.value;
+            if (!selectedSubjectId) return;
+            
+            renderErrorsList(selectedSubjectId);
+        }
+        
+        function renderErrorsList(subjectId) {
+            const container = document.getElementById('errors-list-container');
+            if (!container) return;
+            
+            const errors = (appState.errorEntries || [])
+                .filter(error => error.subjectId === subjectId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (errors.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">📝 Nenhum erro registrado para esta matéria</p>';
+                return;
+            }
+            
+            container.innerHTML = errors.map(error => `
+                <div class="error-card">
+                    <div class="error-header">
+                        <div class="error-title">
+                            ❌ ${formatDate(new Date(error.date))}
+                        </div>
+                        <button class="btn btn-outline btn-xs" onclick="deleteErrorEntry('${error.id}')" 
+                                style="color: var(--danger);">🗑️</button>
+                    </div>
+                    <div class="error-details" style="font-weight: 500; color: var(--text);">
+                        ${error.texto}
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        ${error.erros} erro${error.erros > 1 ? 's' : ''}
+                        ${error.fonte ? ` • Fonte: ${error.fonte}` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function saveErrorEntry(e) {
+            e.preventDefault();
+            
+            const selectedSubjectId = document.getElementById('errors-subject-select')?.value;
+            const errorCount = parseInt(document.getElementById('error-count').value) || 1;
+            const fonte = document.getElementById('error-source').value.trim();
+            const texto = document.getElementById('error-text').value.trim();
+            
+            // Clear previous feedback
+            const feedback = document.getElementById('errors-feedback');
+            feedback.textContent = '';
+            
+            // Validation
+            if (!selectedSubjectId) {
+                feedback.textContent = '❌ Selecione uma matéria';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (!texto) {
+                feedback.textContent = '❌ Texto da questão/erro é obrigatório';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            // Ensure errorEntries array exists
+            if (!appState.errorEntries) {
+                appState.errorEntries = [];
+            }
+            
+            const now = new Date().toISOString();
+            
+            // Create error entry (WITHOUT creating questionLog)
+            const errorEntry = {
+                id: generateId(),
+                subjectId: selectedSubjectId,
+                date: now,
+                texto: texto,
+                fonte: fonte,
+                erros: errorCount
+            };
+            
+            // Add to error entries collection
+            appState.errorEntries.unshift(errorEntry);
+            
+            // Save data
+            saveData();
+            
+            // Update UIs
+            updateErrorsSubjectSelector();
+            renderErrorsView();
+            
+            // Update questions stats (to reflect new error count)
+            updateQuestionsSubjectSelector();
+            
+            // Clear form
+            document.getElementById('error-form').reset();
+            document.getElementById('error-count').value = '1'; // Reset to default
+            
+            // Show success feedback
+            feedback.textContent = `✅ Erro registrado: ${errorCount} erro${errorCount > 1 ? 's' : ''}`;
+            feedback.style.color = 'var(--primary)';
+            
+            // Clear feedback after 3 seconds
+            setTimeout(() => {
+                feedback.textContent = '';
+            }, 3000);
+        }
+        
+        function deleteErrorEntry(errorId) {
+            if (!confirm('Tem certeza que deseja excluir este erro?')) return;
+            
+            if (!appState.errorEntries) return;
+            
+            // Remove only the error entry (no linked questionLog to remove)
+            appState.errorEntries = appState.errorEntries.filter(e => e.id !== errorId);
+            
+            // Save and update
+            saveData();
+            updateErrorsSubjectSelector();
+            renderErrorsView();
+            updateQuestionsSubjectSelector(); // Update questions stats to reflect error count change
+        }
+
+        // ========== STUDY TIME MODULE ==========
+        function saveStudyTime(e) {
+            e.preventDefault();
+            
+            const subjectId = document.getElementById('study-subject')?.value;
+            const minutes = parseInt(document.getElementById('study-minutes').value) || 0;
+            const note = document.getElementById('study-notes').value.trim();
+            
+            // Clear previous feedback
+            const feedback = document.getElementById('study-time-feedback');
+            feedback.textContent = '';
+            
+            // Validation
+            if (!subjectId) {
+                feedback.textContent = '❌ Selecione uma matéria';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            if (minutes <= 0) {
+                feedback.textContent = '❌ Tempo deve ser maior que 0';
+                feedback.style.color = 'var(--danger)';
+                return;
+            }
+            
+            // Ensure studySessions array exists
+            if (!appState.studySessions) {
+                appState.studySessions = [];
+            }
+            
+            // Create study session
+            const studySession = {
+                id: generateId(),
+                subjectId: subjectId,
+                date: new Date().toISOString(),
+                minutes: minutes,
+                note: note
+            };
+            
+            // Add to sessions
+            appState.studySessions.unshift(studySession);
+            
+            // Save data
+            saveData();
+            
+            // Update UI
+            updateUI();
+            
+            // Clear form
+            document.getElementById('study-time-form').reset();
+            
+            // Show success feedback
+            const subject = appState.subjects.find(s => s.id === subjectId);
+            const subjectName = subject ? subject.name : 'Matéria';
+            feedback.textContent = `✅ Tempo registrado: ${formatMinutes(minutes)} em ${subjectName}`;
+            feedback.style.color = 'var(--primary)';
+            
+            // Clear feedback after 3 seconds
+            setTimeout(() => {
+                feedback.textContent = '';
+            }, 3000);
+        }
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             updateUI();
+            
+            // Add form event listeners to fix persistence bug
+            const questionForm = document.getElementById('question-log-form');
+            if (questionForm) {
+                questionForm.addEventListener('submit', saveQuestionLog);
+            }
+            
+            const errorForm = document.getElementById('error-form');
+            if (errorForm) {
+                errorForm.addEventListener('submit', saveErrorEntry);
+            }
+            
+            const studyForm = document.getElementById('study-time-form');
+            if (studyForm) {
+                studyForm.addEventListener('submit', saveStudyTime);
+            }
         });
     </script>
 </body>
-
 </html>
-
-
